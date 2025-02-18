@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://5r3penrnm3tf"]
+
+[ext_resource type="Script" path="res://Cenas/invander_shot.gd" id="1_6b8r8"]
+[ext_resource type="Texture2D" uid="uid://dqyn6gkxj6slf" path="res://Assets Space Invades/Weapons/Rocket.png" id="1_7jtkj"]
+[ext_resource type="AudioStream" uid="uid://bxc3qqklamd0e" path="res://audio/laser.wav" id="3_g806s"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sfg4s"]
+size = Vector2(3, 6)
+
+[node name="InvanderShot" type="Area2D"]
+scale = Vector2(3, 3)
+collision_layer = 8
+script = ExtResource("1_6b8r8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_7jtkj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_sfg4s")
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+rect = Rect2(-1.5, -3, 3, 6)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_g806s")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]

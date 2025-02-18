@@ -1,0 +1,98 @@
+[gd_scene load_steps=15 format=3 uid="uid://dgmkntbgiibwa"]
+
+[ext_resource type="PackedScene" uid="uid://r7phyyxql3hl" path="res://Cenas/player.tscn" id="1_x1e0t"]
+[ext_resource type="PackedScene" uid="uid://d2of64lut3s2v" path="res://Cenas/bullet_catcher.tscn" id="2_3heir"]
+[ext_resource type="PackedScene" uid="uid://dowpt0atwxtld" path="res://Cenas/invader_spawner.tscn" id="3_angsw"]
+[ext_resource type="Script" path="res://Cenas/UfoSpawner.gd" id="4_quf3p"]
+[ext_resource type="Script" path="res://Cenas/SpawnTimer.gd" id="5_b77js"]
+[ext_resource type="PackedScene" uid="uid://41rbiatmp2hl" path="res://Cenas/bunker.tscn" id="6_n68ta"]
+[ext_resource type="Script" path="res://Cenas/LifeManager.gd" id="7_7dth4"]
+[ext_resource type="Script" path="res://Cenas/PointsCounter.gd" id="8_01pfj"]
+[ext_resource type="PackedScene" uid="uid://bx06y8b5wqdct" path="res://Cenas/ui.tscn" id="9_80njb"]
+[ext_resource type="AudioStream" uid="uid://cf3o3xmd44dl" path="res://audio/music.wav" id="10_jkv11"]
+[ext_resource type="Script" path="res://Cenas/audio_background.gd" id="11_2hrn1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4qo0b"]
+size = Vector2(20, 648)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a8f51"]
+size = Vector2(20, 648)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dhvxf"]
+size = Vector2(1110, 46)
+
+[node name="main" type="Node"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Player" parent="." instance=ExtResource("1_x1e0t")]
+position = Vector2(0, 302)
+
+[node name="BulletCatcher" parent="." instance=ExtResource("2_3heir")]
+
+[node name="InvaderSpawner" parent="." instance=ExtResource("3_angsw")]
+
+[node name="Walls" type="Node" parent="."]
+
+[node name="LeftWall" type="Area2D" parent="Walls"]
+collision_layer = 32
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/LeftWall"]
+position = Vector2(-566, 0)
+shape = SubResource("RectangleShape2D_4qo0b")
+
+[node name="RightWall" type="Area2D" parent="Walls"]
+collision_layer = 32
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/RightWall"]
+position = Vector2(566, 0)
+shape = SubResource("RectangleShape2D_a8f51")
+
+[node name="BottomWall" type="Area2D" parent="Walls"]
+collision_layer = 32
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/BottomWall"]
+position = Vector2(0, 295)
+shape = SubResource("RectangleShape2D_dhvxf")
+
+[node name="UfoSpawner" type="Node2D" parent="."]
+position = Vector2(491, -264)
+script = ExtResource("4_quf3p")
+
+[node name="SpawnTimer" type="Timer" parent="UfoSpawner"]
+script = ExtResource("5_b77js")
+
+[node name="Bunker" parent="." instance=ExtResource("6_n68ta")]
+position = Vector2(-376, 174)
+
+[node name="Bunker2" parent="." instance=ExtResource("6_n68ta")]
+position = Vector2(-144, 174)
+
+[node name="Bunker3" parent="." instance=ExtResource("6_n68ta")]
+position = Vector2(144, 174)
+
+[node name="Bunker4" parent="." instance=ExtResource("6_n68ta")]
+position = Vector2(374, 174)
+
+[node name="LifeManager" type="Node" parent="."]
+script = ExtResource("7_7dth4")
+
+[node name="PointsCounter" type="Node" parent="."]
+script = ExtResource("8_01pfj")
+
+[node name="UI" parent="." instance=ExtResource("9_80njb")]
+
+[node name="BackgroundMusic" type="AudioStreamPlayer2D" parent="."]
+texture_filter = 1
+stream = ExtResource("10_jkv11")
+volume_db = -21.791
+autoplay = true
+script = ExtResource("11_2hrn1")
+
+[connection signal="area_entered" from="Walls/LeftWall" to="InvaderSpawner" method="_on_left_wall_area_entered"]
+[connection signal="area_entered" from="Walls/RightWall" to="InvaderSpawner" method="_on_right_wall_area_entered"]
+[connection signal="area_entered" from="Walls/BottomWall" to="InvaderSpawner" method="_on_bottom_wall_area_entered"]
+[connection signal="timeout" from="UfoSpawner/SpawnTimer" to="UfoSpawner" method="_on_spawn_timer_timeout"]
